@@ -1,0 +1,34 @@
+#!/bin/bash
+set -e
+
+username=$1
+
+if [ -z "$username" ]; then
+  printf "Import GPG keys published by a GitHub user\n"
+  printf "Usage: %s github_username\n" "$0"
+  exit 1
+fi
+
+echo "Importing published GPG keys for GitHub user ${username}"
+
+keyBlob=$(gh api "users/${username}/gpg_keys")
+keyCount=$(echo "$keyBlob" | jq -r ". | length")
+
+
+if [ "$keyCount" == 0 ]
+then
+  echo "No keys found"
+  exit 0
+fi
+
+for i in $(jot "$keyCount" 0)
+do
+  rawKey=$(echo "$keyBlob" | jq -r ".[$i].raw_key")
+
+  if [ "$rawKey" != "null" ]; then
+    echo "$rawKey" | gpg --import
+  fi
+done
+
+printf "\n\nKeys have been imported.\n"
+printf "If you trust this user, consider signing their key using 'gpg --ask-cert-level --sign-key \$EMAIL'\n"
