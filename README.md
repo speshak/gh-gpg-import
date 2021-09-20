@@ -15,3 +15,10 @@ Import a user's public GPG keys into your keyring:
 ```
 gh gpg-import $GITHUB_USERNAME
 ```
+
+
+Import the GitHub web-flow GPG key
+
+```
+gh gpg-import github-webflow
+```

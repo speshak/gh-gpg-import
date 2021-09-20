@@ -9,6 +9,12 @@ if [ -z "$username" ]; then
   exit 1
 fi
 
+if [ "$username" = "github-webflow" ]; then
+  echo "Importing GitHub webflow key"
+  curl --silent https://github.com/web-flow.gpg | gpg --import
+  exit
+fi
+
 echo "Importing published GPG keys for GitHub user ${username}"
 
 keyBlob=$(gh api "users/${username}/gpg_keys")
