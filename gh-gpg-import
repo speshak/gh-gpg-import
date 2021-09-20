@@ -21,9 +21,9 @@ then
   exit 0
 fi
 
-for i in $(jot "$keyCount" 0)
+for (( c=0; c<=keyCount; c++ ))
 do
-  rawKey=$(echo "$keyBlob" | jq -r ".[$i].raw_key")
+  rawKey=$(echo "$keyBlob" | jq -r ".[$c].raw_key")
 
   if [ "$rawKey" != "null" ]; then
     echo "$rawKey" | gpg --import
